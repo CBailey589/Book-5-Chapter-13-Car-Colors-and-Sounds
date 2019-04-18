@@ -20,10 +20,45 @@ namespace myApp
             Console.WriteLine("This Vehicle is Stopped!...");
         }
     }
+
+    public class GasStation : IReEnergizingStation<IGasPowered>
+    {
+        public int Capacity { get; set; }
+        public void Refuel(List<IGasPowered> list)
+        {
+           foreach (IGasPowered veh in list)
+           {
+               veh.RefuelTank();
+           }
+        }
+    }
+    public class ChargingStation : IReEnergizingStation<IElectricPowered>
+    {
+        public int Capacity { get; set; }
+        public void Refuel(List<IElectricPowered> list)
+        {
+           foreach (IElectricPowered veh in list)
+           {
+               veh.ChargeBattery();
+           }
+        }
+    }
+    public interface IReEnergizingStation<T>
+    {
+        int Capacity {get;set;}
+        void Refuel(List<T> list);
+    }
+
     public interface IElectricPowered
     {
         double BatteryKWh { get; set; }
         void ChargeBattery();
+    }
+
+    public interface IGasPowered
+    {
+        double FuelCapacity { get; set; }
+        void RefuelTank();
     }
     public class Zero : Vehicle, IElectricPowered
     {  // Electric motorcycle
@@ -46,7 +81,7 @@ namespace myApp
             Console.WriteLine($"The {MainColor} Zero screeches to a halt on its front wheel!");
         }
     }
-    public class Cessna : Vehicle
+    public class Cessna : Vehicle, IGasPowered
     {  // Propellor light aircraft
         public double FuelCapacity { get; set; }
         public void RefuelTank()
@@ -86,7 +121,7 @@ namespace myApp
             Console.WriteLine($"The {MainColor} Tesla parks way away from the other vehicles and takes up two spaces!");
         }
     }
-    public class Ram : Vehicle
+    public class Ram : Vehicle, IGasPowered
     {  // Gas powered truck
         public double FuelCapacity { get; set; }
         public void RefuelTank()
@@ -140,6 +175,18 @@ namespace myApp
                 veh.Stop();
             }
 
+            GasStation ConnorsGasStation = new GasStation();
+            ChargingStation ConnorsBatteryStation = new ChargingStation();
+
+            List<IGasPowered> GasVehicles = new List<IGasPowered>() {
+                Ram2500,Cessna172
+            };
+            List<IElectricPowered> ElectricVehicles = new List<IElectricPowered>() {
+                ZeroFx, TeslaModelX
+            };
+
+            ConnorsGasStation.Refuel(GasVehicles);
+            ConnorsBatteryStation.Refuel(ElectricVehicles);
 
 
         }
