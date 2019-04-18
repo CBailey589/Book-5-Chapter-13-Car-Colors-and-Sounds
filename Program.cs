@@ -21,10 +21,18 @@ namespace myApp
         }
     }
 
-    public class GasStation : IReEnergizingStation<IGasPowered>
+    public class ReEnergizingStation<T>
     {
-        public int Capacity { get; set; }
-        public void Refuel(List<IGasPowered> list)
+        public int Capacity {get;set;}
+        public virtual void Refuel(List<T> list)
+        {
+
+        }
+    }
+
+    public class GasStation : ReEnergizingStation<IGasPowered>, IReEnergizingStation<IGasPowered>
+    {
+        public override void Refuel(List<IGasPowered> list)
         {
            foreach (IGasPowered veh in list)
            {
@@ -32,10 +40,9 @@ namespace myApp
            }
         }
     }
-    public class ChargingStation : IReEnergizingStation<IElectricPowered>
+    public class ChargingStation : ReEnergizingStation<IElectricPowered>, IReEnergizingStation<IElectricPowered>
     {
-        public int Capacity { get; set; }
-        public void Refuel(List<IElectricPowered> list)
+        public override void Refuel(List<IElectricPowered> list)
         {
            foreach (IElectricPowered veh in list)
            {
